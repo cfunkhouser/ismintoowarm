@@ -18,7 +18,7 @@ const yes = `
   font-family: serif;
   font-size: xx-large;
 }
-</style></head>
+</style><title>Is Min too warm? Let's find out!</title></head>
 <body class="imtw">
   <div><p>Yes.</p></div>
 </body></html>
