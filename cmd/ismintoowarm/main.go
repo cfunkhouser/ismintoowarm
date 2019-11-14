@@ -15,6 +15,7 @@ import (
 
 type answer struct {
 	Answer string
+	When   string
 }
 
 type simpleCache struct {
@@ -48,9 +49,14 @@ var (
   font-family: serif;
   font-size: xx-large;
 }
+.imtw div p.suble {
+	font-size: small;
+	color: grey;
+}
 </style><title>Is Min too warm? Let's find out!</title></head>
 <body class="imtw">
-  <div><p>{{ .Answer }}</p></div>
+	<div><p>{{ .Answer }}</p></div>
+	<div><p class="suble">As of {{ .When }}</p></div>
 </body></html>
 <!-- Hello, Min! -->
 `))
@@ -62,13 +68,15 @@ func answerHTTP(w http.ResponseWriter, r *http.Request) {
 	latest := cache.latest
 	cache.RUnlock()
 
-	var a answer
+	a := answer{
+		When: latest.Time.Format("2006-01-02 15:04:05"),
+	}
 	if !latest.Success {
-		a.Answer = "Probably"
-	} else if latest.Temperature < 23.75 {
-		a.Answer = "Yes"
+		a.Answer = "Probably."
+	} else if latest.Temperature > 23.75 {
+		a.Answer = "Yes."
 	} else {
-		a.Answer = "No"
+		a.Answer = "No."
 	}
 
 	err := answerTmpl.Execute(w, a)
@@ -88,10 +96,7 @@ func main() {
 	cache.latest = thisiswhyimhot.Latest()
 	go refreshCachePeriodically()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
-		fmt.Fprint(w, yes)
-	})
+	http.HandleFunc("/", answerHTTP)
 
 	hp := fmt.Sprintf(":%v", port)
 	log.Printf("Listening on %v", hp)

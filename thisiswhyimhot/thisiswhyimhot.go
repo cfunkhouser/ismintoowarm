@@ -19,7 +19,7 @@ type MinTemperatureReport struct {
 
 	// Temperatur in Celcius. The temp3 sensor is the most accurate, according
 	// to Min.
-	Temperature float64 `json:"temp3"`
+	Temperature float64 `json:"temp3,string"`
 
 	// Success is true if the fetch from the API went well.
 	Success bool
@@ -29,7 +29,9 @@ const tiwihLatestAPI = "https://thisiswhyimhot.herokuapp.com/api/temperature/lat
 
 // Latest MinTemperatureReport.
 func Latest() MinTemperatureReport {
-	var report MinTemperatureReport
+	report := MinTemperatureReport{
+		Time: time.Now(), // Default to the time here, in case the fetch goes poorly
+	}
 	data, err := fetchPayload()
 	if err != nil {
 		log.WithError(err).Warnf("Failed to fetch the payload from %q", tiwihLatestAPI)
