@@ -20,7 +20,7 @@ const yes = `
 }
 </style><title>Is Min too warm? Let's find out!</title></head>
 <body class="imtw">
-  <div><p>Yes.</p></div>
+  <div><p>No.</p></div>
 </body></html>
 <!-- Hello, Min! -->
 `
