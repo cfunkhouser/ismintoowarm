@@ -69,7 +69,7 @@ func answerHTTP(w http.ResponseWriter, r *http.Request) {
 	cache.RUnlock()
 
 	a := answer{
-		When: latest.Time.Format("2006-01-02 15:04:05"),
+		When: latest.Time.Format("2006-01-02 15:04:05 MST"),
 	}
 	if !latest.Success {
 		a.Answer = "Probably."
